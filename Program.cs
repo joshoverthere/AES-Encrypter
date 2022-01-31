@@ -13,30 +13,42 @@ namespace AES
             return state;
         }
 
-        static breakBlocks(string bytes)
+        static List<byte[]> breakBlocks(List<byte> bytes)
         {
-            //This function breaks a 1D array of bytes into 
+            List<byte[]> blocks = new List<byte[]>();
+
+            Console.WriteLine(bytes.Count);
+            
+            return blocks;
+            //This function breaks a 1D array of bytes into blocks of 16 bytes each (adding empty bytes so that all blocks are full)
+
         }
         
         static void Main(string[] args)
         {
             while (true)
             {
+                //allow user to input message and key
                 Console.Write("Enter message: ");
                 string message = Console.ReadLine();
                 Console.Write("Enter key: ");
                 string key = Console.ReadLine();
 
+                //format message
+                message = message.ToLower();
+                message = message.Replace(" ", "");
 
-                byte[] array = Encoding.ASCII.GetBytes(message);
+
+                byte[] asciiBytes = Encoding.ASCII.GetBytes(message);
 
                 // Loop through contents of the array.
-                foreach (byte element in array)
+                foreach (byte element in asciiBytes)
                 {
-                    Console.WriteLine(element);
+                    Console.WriteLine(Convert.ToString(element, 2));
+
                 }
 
-                Console.WriteLine(Convert.ToString(155, 2));
+                
 
             }
         }
