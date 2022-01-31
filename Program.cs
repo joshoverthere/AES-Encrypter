@@ -7,18 +7,27 @@ namespace AES
     class Program
     {
         
-        static byte[,] generateState(string message)
+        static string[,] generateState(string message)
         {
-            byte[,] state = new byte[4,4];
+            string[,] state = new string[4,4];
             return state;
         }
 
-        static List<byte[]> breakBlocks(List<byte> bytes)
+        static List<string[]> breakBlocks(List<string> bytes)
         {
-            List<byte[]> blocks = new List<byte[]>();
+            List<string[]> blocks = new List<string[]>();
 
-            Console.WriteLine(bytes.Count);
+            if (bytes.Count % 16 != 0)
+            {
+                Console.WriteLine("Adding empty bytes...");
+                for (int i = 0; i < (bytes.Count%16); i++)
+                {
+                    bytes.Add("00000000");
+                }
+            }
+
             
+
             return blocks;
             //This function breaks a 1D array of bytes into blocks of 16 bytes each (adding empty bytes so that all blocks are full)
 
@@ -38,15 +47,17 @@ namespace AES
                 message = message.ToLower();
                 message = message.Replace(" ", "");
 
-
+                //convert message to bytes of ascii
                 byte[] asciiBytes = Encoding.ASCII.GetBytes(message);
 
-                // Loop through contents of the array.
+                //convert ascii bytes to binary bytes and add them to list of bytes
+                List<string> bytes = new List<string>();
                 foreach (byte element in asciiBytes)
                 {
-                    Console.WriteLine(Convert.ToString(element, 2));
-
+                    bytes.Add(Convert.ToString(element, 2));
                 }
+
+                List<string[]> blocks = breakBlocks(bytes);
 
                 
 
