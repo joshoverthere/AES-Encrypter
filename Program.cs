@@ -7,9 +7,21 @@ namespace AES
     class Program
     {
         
-        static List<List<string>> generateState(List<string> block)
+        //takes a list of 16 bytes (a block) and converts it into a 4x4 column-major-order array of bytes
+        static string[,] generateState(List<string> block)
         {
-            List<List<string>> state = new List<List<string>>();    
+            string[,] state = new string[4, 4];
+            int count = 0;
+
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int a = 0; a < 4; a++)
+                {
+                    state[i, a] = block[count];
+                    count += 1;
+                }
+            }
             return state;
         }
 
@@ -41,7 +53,6 @@ namespace AES
             }
 
             Console.WriteLine("Number of blocks : " + blocks.Count.ToString());
-            
 
             return blocks;
 
@@ -71,9 +82,15 @@ namespace AES
                     bytes.Add(Convert.ToString(element, 2));
                 }
 
+                //break the list of bytes into 16-byte blocks
                 List<List<string>> blocks = breakBlocks(bytes);
 
-                
+                //generate "states" from the 16-byte blocks and store the states in a list
+                List<string[,]> states = new List<string[,]>();
+                foreach (List<string> block in blocks)
+                {
+                    states.Add(generateState(block));
+                }
 
             }
         }
