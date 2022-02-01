@@ -6,18 +6,42 @@ namespace AES
 {
     class Program
     {
+        //Takes a state's 4x4 array of strings and visualises it in the console (for debugging)
+        static void displayArray(string[,] array1)
+        {
+            Console.WriteLine("State Visualisation:");
+            for (int i = 0; i < 4; i++)
+            {
+                for (int a = 0; a < 4; a++)
+                {
+                    Console.WriteLine(array1[a,i]);
+                }
+            }
+        }
+
+
         //Map 4x4 byte array to 4x4 byte output array with Rijndael substitution box
         static string[,] sBox(string[,] state)
         {
+            Console.WriteLine("Applying S-box to state.");
             //set up 4x4 output array of bytes
             string[,] outputState = new string[4, 4];
 
+            //visualise state
+            displayArray(state);
+
             //set up array for Rijndael s-box
+
+
+            /*
             List<List<string>> sBox = new List<List<string>>();
             sBox.Add(new List<string> { "63","7c","77","7b","f2","6b","6f","c5","30","01","67","2b","fe","d7","ab","76"});
             sBox.Add(new List<string> { "ca","82","c9","7d","fa","59","47","f0","ad","d4","a2","af","9c","a4","72","c0"});
             sBox.Add(new List<string> { "b7","fd","93","26","36","3f","f7","cc","34","a5","e5","f1","71","d8","31","15"});
             sBox.Add(new List<string> { "04", "c7","23","c3","18","96","05","9a","07","12","80","e2","eb","27","b2","75" });
+            */
+
+
 
             //perform substitution on each byte in the state array
             for (int i = 0; i < 4; i++)
@@ -121,12 +145,12 @@ namespace AES
                     states.Add(generateState(block));
                 }
 
+                List<string[,]> updatedStates = new List<string[,]>();
                 foreach (string[,] state in states)
                 {
-                    foreach (string charbyte in state){
-                        Console.WriteLine(charbyte);
-                    }
+                    updatedStates.Add(sBox(state));
                 }
+                states = updatedStates;
 
             }
         }
