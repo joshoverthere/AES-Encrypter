@@ -4,8 +4,53 @@ using System.Text;
 
 namespace AES
 {
+
+    public class state
+    {
+        public static byte[,] contents = new byte[4, 4];
+        public static string name = "";
+
+        //call this function and pass a list of 16 bytes to set the initial contents of the state
+        static void init(List<string> block)
+        {
+
+        }
+        
+        //visualises the state's contents in console
+        static void visualize()
+        {
+            Console.WriteLine("Visualizing state " + name + ":");
+            for (int i = 0; i < 4; i++)
+            {
+                Console.WriteLine();
+                for (int a = 0; a<4; a++)
+                {
+                    Console.Write(contents[i,a]);
+                }
+            }
+        }
+    }
+
+
     class Program
     {
+
+        //takes a list of 16 bytes (a block) and converts it into a 4x4 column-major-order array of bytes
+        static string[,] generateState(List<string> block)
+        {
+            string[,] state = new string[4, 4];
+            int count = 0;
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int a = 0; a < 4; a++)
+                {
+                    state[a, i] = block[count];
+                    count += 1;
+                }
+            }
+            return state;
+        }
 
         //Takes a state's 4x4 array of strings and visualises it in the console (for debugging)
         static void displayArray(string[,] array1)
@@ -87,23 +132,6 @@ namespace AES
             return outputState;
         }
         
-        //takes a list of 16 bytes (a block) and converts it into a 4x4 column-major-order array of bytes
-        static string[,] generateState(List<string> block)
-        {
-            string[,] state = new string[4, 4];
-            int count = 0;
-
-
-            for (int i = 0; i < 4; i++)
-            {
-                for (int a = 0; a < 4; a++)
-                {
-                    state[a,i] = block[count];
-                    count += 1;
-                }
-            }
-            return state;
-        }
 
         //This function breaks a list of bytes into lists (blocks) of 16 bytes each (adding empty bytes so that all blocks are full)
         static List<List<string>> breakBlocks(List<string> bytes)
@@ -176,11 +204,6 @@ namespace AES
                 {
                     states.Add(generateState(block));
                 }
-
-
-
-
-
 
 
                 List<string[,]> updatedStates = new List<string[,]>();
