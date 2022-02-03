@@ -6,7 +6,32 @@ namespace AES
 {
     class Program
     {
-        private readonly byte[] sBoxForward = new byte[256] {
+
+        //Takes a state's 4x4 array of strings and visualises it in the console (for debugging)
+        static void displayArray(string[,] array1)
+        {
+            Console.WriteLine("State Visualisation:");
+            for (int i = 0; i < 4; i++)
+            {
+                Console.WriteLine();
+                for (int a = 0; a < 4; a++)
+                {
+                    //int intOut = Convert.ToInt32(array1[i,a], 2);
+                    Console.Write(array1[i,a].ToString() + "  ");
+                    //string hexOut = Convert.ToInt32(array1[i,a], 2).ToString("X");
+                    //Console.Write(hexOut + "  ");
+
+                    //Console.Write((intOut/16).ToString() + (intOut%16).ToString() + "  ");
+                }
+            }
+            Console.WriteLine();
+        }
+
+
+        //Map 4x4 byte array to 4x4 byte output array with Rijndael substitution box
+        static string[,] sBox(string[,] state)
+        {
+            byte[] sBoxForward = new byte[256] {
             0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
             0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
             0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
@@ -24,31 +49,6 @@ namespace AES
             0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
             0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 };
 
-
-        //Takes a state's 4x4 array of strings and visualises it in the console (for debugging)
-        static void displayArray(string[,] array1)
-        {
-            Console.WriteLine("State Visualisation:");
-            for (int i = 0; i < 4; i++)
-            {
-                Console.WriteLine();
-                for (int a = 0; a < 4; a++)
-                {
-                    int intOut = Convert.ToInt32(array1[i,a], 2);
-                    string hexOut = Convert.ToInt32(array1[i,a], 2).ToString("X");
-                    //Console.Write(hexOut + "  ");
-                    Console.Write((intOut/16).ToString() + (intOut%16).ToString() + "  ");
-                }
-            }
-            Console.WriteLine();
-        }
-
-
-        //Map 4x4 byte array to 4x4 byte output array with Rijndael substitution box
-        static string[,] sBox(string[,] state)
-        {
-            
-
             Console.WriteLine("Applying S-box to state.");
             //set up 4x4 output array of bytes
             string[,] outputState = new string[4, 4];
@@ -58,18 +58,32 @@ namespace AES
 
             //set up array for Rijndael s-box
 
-
-
-
             //perform substitution on each byte in the state array
             for (int i = 0; i < 4; i++)
             {
                 for (int a = 0; a < 4; a++)
                 {
+                    //get value of byte as an integer so it can be used in formula to find index of substition in S-box
+                    int intOut = Convert.ToInt32(state[i, a], 2);
+                    Console.WriteLine("Int out: " + intOut);
+
+                    int myInt = sBoxForward[intOut];
+
+
+
+                    string myHex = myInt.ToString("X");
+
+                    
+
+                    //Console.WriteLine("Int: " + myInt);
+                    Console.WriteLine("Hex: " + myHex);
+
+                    outputState[i, a] = myHex;
 
                 }
             }
 
+            Console.WriteLine("Substituted state.");
             return outputState;
         }
         
@@ -163,10 +177,20 @@ namespace AES
                     states.Add(generateState(block));
                 }
 
+
+
+
+
+
+
                 List<string[,]> updatedStates = new List<string[,]>();
                 foreach (string[,] state in states)
                 {
-                    updatedStates.Add(sBox(state));
+                    string[,] updatedState = new string[4, 4];
+                    updatedState = sBox(state);
+                    updatedStates.Add(updatedState);
+                    Console.WriteLine(updatedState.Length.ToString());
+                    displayArray(updatedState);
                 }
                 states = updatedStates;
 
