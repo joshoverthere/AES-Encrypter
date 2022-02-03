@@ -56,7 +56,7 @@ namespace AES
             //visualise state
             displayArray(state);
 
-            //set up array for Rijndael s-box
+            Console.WriteLine("\n The following substitutions were performed: \n");
 
             //perform substitution on each byte in the state array
             for (int i = 0; i < 4; i++)
@@ -64,8 +64,8 @@ namespace AES
                 for (int a = 0; a < 4; a++)
                 {
                     //get value of byte as an integer so it can be used in formula to find index of substition in S-box
-                    int intOut = Convert.ToInt32(state[i, a], 2);
-                    Console.WriteLine("Int out: " + intOut);
+                    int intOut = Convert.ToInt32(state[a,i], 2);
+                    //Console.WriteLine("Int out: " + intOut);
 
                     int myInt = sBoxForward[intOut];
 
@@ -73,12 +73,12 @@ namespace AES
 
                     string myHex = myInt.ToString("X");
 
-                    
+                    Console.WriteLine("Binary: " + Convert.ToString(Convert.ToInt64(myHex, 16), 2));
 
                     //Console.WriteLine("Int: " + myInt);
                     Console.WriteLine("Hex: " + myHex);
 
-                    outputState[i, a] = myHex;
+                    outputState[a, i] = Convert.ToString(Convert.ToInt64(myHex, 16), 2);
 
                 }
             }
